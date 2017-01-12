@@ -1,0 +1,29 @@
+{
+  "name": "my-app",
+  "version": "0.1.0",
+  "private": true,
+  "proxy": "http://127.0.0.1:8081/",
+  "devDependencies": {
+    "react-scripts": "0.8.5"
+  },
+  "dependencies": {
+    "axios": "0.15.3",
+    "dateformat": "2.0.0",
+    "fuse": "0.4.0",
+    "react": "15.4.2",
+    "react-addons-css-transition-group": "15.4.2",
+    "react-addons-transition-group": "15.4.2",
+    "react-dom": "15.4.2",
+    "react-md": "1.0.0",
+    "react-redux": "^4.4.5",
+    "redux": "^3.5.2",
+    "redux-promise": "0.5.3",
+    "redux-thunk": "2.1.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

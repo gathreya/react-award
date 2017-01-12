@@ -1,0 +1,15 @@
+export default [
+  '000001',
+  'BL-BL',
+  'BL-IIDC',
+  'BL-RCEN',
+  'BL-RUGS',
+  'IN-CARD',
+  'IN-CARR',
+  'IN-IN',
+  'IN-MDEP',
+  'IN-MED',
+  'IN-PED',
+  'IN-PERS',
+  'IU-UNIV',
+];
