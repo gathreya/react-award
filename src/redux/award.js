@@ -49,6 +49,14 @@ export function updateAwardValue(key, value) {
 }
 
 export function savePeople(award, people) {
+  let awardPersons = people;
+  awardPersons.map((awardPerson) => {
+    awardPerson.personId = awardPerson.principalId;
+    delete awardPerson.principalName;
+    delete awardPerson.principalId;
+  });
+
+  console.log('people here is ' + JSON.stringify(awardPersons));
   const config = {
     headers: {
       'Authorization': 'Basic Y3JhcDphZG1pbg==',
@@ -56,7 +64,7 @@ export function savePeople(award, people) {
     }
   };
 
-  const updatedAward = axios.post('kc-dev/research-sys/api/v2/persons?username=' + award.awardId, config);
+  const updatedAward = axios.post('kc-dev/award/api/v2/awards/'+ award.awardId + '/award-persons/', awardPersons, config);
 
   return {
     type: SAVE_PEOPLE,

@@ -1,14 +1,7 @@
 import React, { Component } from 'react';
 import './../App.css';
 import DetailsDates from './DetailsDates';
-import AwardDetails from './AwardDetails';
 import Button from 'react-md/lib/Buttons/Button';
-import Card from 'react-md/lib/Cards/Card';
-import CardTitle from 'react-md/lib/Cards/CardTitle';
-import CardActions from 'react-md/lib/Cards/CardActions';
-import CardText from 'react-md/lib/Cards/CardText';
-import Paper from 'react-md/lib/Papers';
-import NavigationDrawer from 'react-md/lib/NavigationDrawers';
 
 import { saveAward, updateAwardValue} from './../redux/award';
 import { connect } from 'react-redux';

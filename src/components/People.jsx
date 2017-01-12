@@ -5,20 +5,28 @@ import './../App.css';
 import AwardDetails from './AwardDetails';
 import Button from 'react-md/lib/Buttons/Button';
 import Autocomplete from 'react-md/lib/Autocompletes';
-import DataTable from 'react-md/lib/DataTables/DataTable';
-import TableHeader from 'react-md/lib/DataTables/TableHeader';
-import TableBody from 'react-md/lib/DataTables/TableBody';
-import TableRow from 'react-md/lib/DataTables/TableRow';
-import TableColumn from 'react-md/lib/DataTables/TableColumn';
 import SelectedPerson from './SelectedPerson';
 import Tabs from 'react-md/lib/Tabs/Tabs';
 import Tab from 'react-md/lib/Tabs/Tab';
 import TabsContainer from 'react-md/lib/Tabs/TabsContainer';
+import BottomNavigation from 'react-md/lib/BottomNavigations';
 
 import { saveAward, updateAwardValue, savePeople} from './../redux/award';
 import { connect } from 'react-redux';
 const dateFormat = require('dateformat');
 let persons;
+
+const links = [{
+    label: 'Previous',
+    iconChildren: 'chevron_left',
+},
+  {
+  label: 'Save',
+  iconChildren: 'check',
+}, {
+  label: 'Next',
+  iconChildren: 'chevron_right',
+}];
 
 class People extends Component {
 
@@ -38,7 +46,6 @@ class People extends Component {
   };
 
   searchPeople = (username) => {
-    console.log('Searching people...' + username);
     const config = {
       headers: {
       'Authorization': 'Basic Y3JhcDphZG1pbg==',
@@ -49,7 +56,6 @@ class People extends Component {
     const self = this;
     axios.get('kc-dev/research-sys/api/v2/persons?username=' + username, config)
       .then(response => {
-        console.log('data is ' +  JSON.stringify(response.data));
         self.setState({persons: response.data});
       })
       .catch(error => {
@@ -58,6 +64,7 @@ class People extends Component {
     ;
   };
 
+  // role is sent as an argument by the onChange event on the select component
   updatePersonRole = (person, role) => {
       let selectedPersonIndex = this.state.selectedPeople.map((p, index) => {
         if (p.principalId === person.principalId) {
@@ -72,8 +79,14 @@ class People extends Component {
   };
 
   savePeople = () => {
+    console.log('Saving people.....' + this.props.award + 'people is ' + this.state.selectedPeople);
     this.props.dispatch(savePeople(this.props.award, this.state.selectedPeople));
   };
+
+  doAction = (newActiveIndex, event) => {
+    console.log('I got ...' + newActiveIndex + ' event ' + event);
+    this.savePeople();
+  }
 
   render() {
     const self = this;
@@ -88,12 +101,11 @@ class People extends Component {
 
         <TabsContainer panelClassName="md-grid" colored>
           <Tabs tabId="tab">
-            <Tab label="Key Personnel and Credit Split" style={size: 30px}>
+            <Tab label="Key Personnel and Credit Split">
               <Autocomplete
                 id="person-search"
                 type="search"
                 label="Type a username"
-                className="md-cell"
                 placeholder="Person"
                 data={this.state.persons}
                 dataLabel="principalName"
@@ -104,6 +116,13 @@ class People extends Component {
               />
 
                     {peoples}
+
+
+              <BottomNavigation
+                links={links}
+                dynamic={false}
+                onNavChange={this.doAction}
+                />
             </Tab>
             <Tab label="Unit Contacts">
             </Tab>
@@ -114,7 +133,6 @@ class People extends Component {
           </Tabs>
         </TabsContainer>
 
-        <Button raised primary label="Save People" />
 
       </div>
     );

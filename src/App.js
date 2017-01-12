@@ -26,7 +26,7 @@ let navItemOutlines = inboxListItemOutlines.map(item => {
 class App extends Component {
 
   render() {
-    if(this.props.award.awardNumber) {
+    if(!this.props.award.awardNumber) {
       return (
         <div className="App">
           <NavigationDrawer
