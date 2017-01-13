@@ -3,6 +3,7 @@ import axios from 'axios';
 export const SAVE = 'myapp/award/SAVE';
 export const UPDATE_VALUE = 'myapp/award/UPDATE_VALUE';
 export const SAVE_PEOPLE = 'myapp/award/SAVE_PEOPLE';
+export const CHANGE_PAGE = 'myapp/award/CHANGE_PAGE';
 
 const initialState = {};
 
@@ -17,7 +18,14 @@ export default function reducer(state = initialState, action) {
       award[action.key] = action.value;
       return award;
     case SAVE_PEOPLE:
-      return action.payload.data;
+      //redux-promise handles these promises correctly somehow
+      let stateAward = {...state};
+      stateAward.projectPersons = action.payload.data;
+      return stateAward;
+    case CHANGE_PAGE:
+      let stateCopy = {...state};
+      stateCopy.currentPage = action.page;
+      return stateCopy;
     default:
       return state;
   }
@@ -40,7 +48,6 @@ export function saveAward(award) {
 }
 
 export function updateAwardValue(key, value) {
-  console.log('Action - ' + key + ': ' + value);
   return {
     type: UPDATE_VALUE,
     key: key,
@@ -54,20 +61,33 @@ export function savePeople(award, people) {
     awardPerson.personId = awardPerson.principalId;
     delete awardPerson.principalName;
     delete awardPerson.principalId;
+    return awardPerson;
   });
 
-  console.log('people here is ' + JSON.stringify(awardPersons));
+  award.projectPersons.forEach((projectPerson) => {
+    let newPerson = {};
+    newPerson.personId = projectPerson.personId;
+    newPerson.roleCode = projectPerson.roleCode;
+    awardPersons.push(newPerson);
+  });
+
   const config = {
     headers: {
       'Authorization': 'Basic Y3JhcDphZG1pbg==',
-      'content-type': 'application/json'
     }
   };
 
-  const updatedAward = axios.post('kc-dev/award/api/v2/awards/'+ award.awardId + '/award-persons/', awardPersons, config);
+  const updatedAward = axios.post('kc-dev/award/api/v2/awards/'+  award.awardId + '/award-persons/', awardPersons, config);
 
   return {
     type: SAVE_PEOPLE,
-    key: updatedAward,
+    payload: updatedAward
+  };
+}
+
+export function goToPage(page) {
+  return {
+    type: CHANGE_PAGE,
+    payload: page
   };
 }

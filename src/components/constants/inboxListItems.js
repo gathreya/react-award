@@ -37,6 +37,6 @@ export default [{
   leftIcon: <FontIcon>folder</FontIcon>,
 }, {
     key: 'summary',
-    primaryText: 'summary',
+    primaryText: 'Summary',
     leftIcon: <FontIcon>format_list_bulleted</FontIcon>,
 }];

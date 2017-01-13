@@ -2,19 +2,24 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 import './../App.css';
-import AwardDetails from './AwardDetails';
-import Button from 'react-md/lib/Buttons/Button';
 import Autocomplete from 'react-md/lib/Autocompletes';
 import SelectedPerson from './SelectedPerson';
+import AddedPeople from './AddedPeople';
+
 import Tabs from 'react-md/lib/Tabs/Tabs';
 import Tab from 'react-md/lib/Tabs/Tab';
 import TabsContainer from 'react-md/lib/Tabs/TabsContainer';
 import BottomNavigation from 'react-md/lib/BottomNavigations';
 
-import { saveAward, updateAwardValue, savePeople} from './../redux/award';
+import DataTable from 'react-md/lib/DataTables/DataTable';
+import TableHeader from 'react-md/lib/DataTables/TableHeader';
+import TableBody from 'react-md/lib/DataTables/TableBody';
+import TableRow from 'react-md/lib/DataTables/TableRow';
+import TableColumn from 'react-md/lib/DataTables/TableColumn';
+import SelectFieldColumn from 'react-md/lib/DataTables/SelectFieldColumn';
+
+import {savePeople} from './../redux/award';
 import { connect } from 'react-redux';
-const dateFormat = require('dateformat');
-let persons;
 
 const links = [{
     label: 'Previous',
@@ -39,7 +44,6 @@ class People extends Component {
   }
 
   selectPerson = (person, index, matches) => {
-    console.log('I got ' +  JSON.stringify(person) + 'index is ' + index + 'matches is ' + JSON.stringify(matches));
     let selectedPeople = this.state.selectedPeople;
     selectedPeople.push(matches[index]);
     this.setState({selectedPeople});
@@ -81,10 +85,10 @@ class People extends Component {
   savePeople = () => {
     console.log('Saving people.....' + this.props.award + 'people is ' + this.state.selectedPeople);
     this.props.dispatch(savePeople(this.props.award, this.state.selectedPeople));
+    this.state.selectedPeople=[];
   };
 
   doAction = (newActiveIndex, event) => {
-    console.log('I got ...' + newActiveIndex + ' event ' + event);
     this.savePeople();
   }
 
@@ -97,11 +101,12 @@ class People extends Component {
     return(
       <div className="People">
 
-        <h1>Add contacts</h1>
+        <h1>Contacts</h1>
 
-        <TabsContainer panelClassName="md-grid" colored>
+        <TabsContainer colored style={{marginBottom: '56px'}}>
           <Tabs tabId="tab">
             <Tab label="Key Personnel and Credit Split">
+
               <Autocomplete
                 id="person-search"
                 type="search"
@@ -113,16 +118,20 @@ class People extends Component {
                 onChange={this.searchPeople}
                 clearOnAutocomplete
                 onAutocomplete={this.selectPerson}
-              />
-
-                    {peoples}
-
-
-              <BottomNavigation
-                links={links}
-                dynamic={false}
-                onNavChange={this.doAction}
                 />
+              <DataTable plain responsive={false}>
+                <TableHeader>
+                  <TableRow>
+                    <TableColumn>Person username</TableColumn>
+                    <TableColumn >Unit</TableColumn>
+                    <TableColumn>Email</TableColumn>
+                    <TableColumn>Phone</TableColumn>
+                    <TableColumn>Role</TableColumn>
+                  </TableRow>
+                </TableHeader>
+                {peoples}
+              </DataTable>
+              <AddedPeople key="addedPerson" persons={this.props.award.projectPersons} />
             </Tab>
             <Tab label="Unit Contacts">
             </Tab>
@@ -133,6 +142,12 @@ class People extends Component {
           </Tabs>
         </TabsContainer>
 
+
+       <BottomNavigation
+          links={links}
+          dynamic={false}
+          onNavChange={this.doAction}
+          />
 
       </div>
     );
